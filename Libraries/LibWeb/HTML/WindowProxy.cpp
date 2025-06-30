@@ -99,7 +99,7 @@ JS::ThrowCompletionOr<Optional<JS::PropertyDescriptor>> WindowProxy::internal_ge
             return throw_completion(WebIDL::SecurityError::create(m_window->realm(), MUST(String::formatted("Can't access property '{}' on cross-origin object", property_key))));
         }
 
-        // 6. Return PropertyDescriptor{ [[Value]]: value, [[Writable]]: false, [[Enumerable]]: true, [[Configurable]]: true }.
+        // 6. Return PropertyDescriptor { [[Value]]: value, [[Writable]]: false, [[Enumerable]]: true, [[Configurable]]: true }.
         return JS::PropertyDescriptor { .value = move(value), .writable = false, .enumerable = true, .configurable = true };
     }
 
@@ -123,7 +123,7 @@ JS::ThrowCompletionOr<Optional<JS::PropertyDescriptor>> WindowProxy::internal_ge
         // 1. Let value be the active WindowProxy of the named object of W with the name P.
         auto value = navigable.value()->active_window_proxy();
 
-        // 2. Return PropertyDescriptor{ [[Value]]: value, [[Enumerable]]: false, [[Writable]]: false, [[Configurable]]: true }.
+        // 2. Return PropertyDescriptor { [[Value]]: value, [[Enumerable]]: false, [[Writable]]: false, [[Configurable]]: true }.
         // NOTE: The reason the property descriptors are non-enumerable, despite this mismatching the same-origin behavior, is for compatibility with existing web content. See issue #3183 for details.
         return JS::PropertyDescriptor { .value = value, .writable = false, .enumerable = false, .configurable = true };
     }
@@ -161,7 +161,7 @@ JS::ThrowCompletionOr<JS::Value> WindowProxy::internal_get(JS::PropertyKey const
     // 1. Let W be the value of the [[Window]] internal slot of this.
 
     // 2. Check if an access between two browsing contexts should be reported, given the current principal global object's browsing context, W's browsing context, P, and the current principal settings object.
-    check_if_access_between_two_browsing_contexts_should_be_reported(*as<Window>(current_principal_global_object()).browsing_context(), m_window->browsing_context(), property_key, current_principal_settings_object());
+    check_if_access_between_two_browsing_contexts_should_be_reported(as<Window>(current_principal_global_object()).browsing_context(), m_window->browsing_context(), property_key, current_principal_settings_object());
 
     // 3. If IsPlatformObjectSameOrigin(W) is true, then return ? OrdinaryGet(this, P, Receiver).
     // NOTE: this is passed rather than W as OrdinaryGet and CrossOriginGet will invoke the [[GetOwnProperty]] internal method.
@@ -182,7 +182,7 @@ JS::ThrowCompletionOr<bool> WindowProxy::internal_set(JS::PropertyKey const& pro
     // 1. Let W be the value of the [[Window]] internal slot of this.
 
     // 2. Check if an access between two browsing contexts should be reported, given the current principal global object's browsing context, W's browsing context, P, and the current principal settings object.
-    check_if_access_between_two_browsing_contexts_should_be_reported(*as<Window>(current_principal_global_object()).browsing_context(), m_window->browsing_context(), property_key, current_principal_settings_object());
+    check_if_access_between_two_browsing_contexts_should_be_reported(as<Window>(current_principal_global_object()).browsing_context(), m_window->browsing_context(), property_key, current_principal_settings_object());
 
     // 3. If IsPlatformObjectSameOrigin(W) is true, then:
     if (is_platform_object_same_origin(*m_window)) {

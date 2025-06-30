@@ -24,7 +24,6 @@ serenity_option(ENABLE_ALL_THE_DEBUG_MACROS OFF CACHE BOOL "Enable all debug mac
 serenity_option(ENABLE_ALL_DEBUG_FACILITIES OFF CACHE BOOL "Enable all noisy debug symbols and options. Not recommended for normal developer use")
 serenity_option(ENABLE_COMPILETIME_HEADER_CHECK OFF CACHE BOOL "Enable compiletime check that each library header compiles stand-alone")
 
-serenity_option(ENABLE_PUBLIC_SUFFIX_DOWNLOAD ON CACHE BOOL "Enable download of the Public Suffix List at build time")
 serenity_option(INCLUDE_WASM_SPEC_TESTS OFF CACHE BOOL "Download and include the WebAssembly spec testsuite")
 serenity_option(INCLUDE_FLAC_SPEC_TESTS OFF CACHE BOOL "Download and include the FLAC spec testsuite")
 serenity_option(ENABLE_CACERT_DOWNLOAD ON CACHE BOOL "Enable download of cacert.pem at build time")
@@ -41,8 +40,9 @@ serenity_option(ENABLE_SWIFT OFF CACHE BOOL "Enable building Swift files")
 serenity_option(ENABLE_STD_STACKTRACE OFF CACHE BOOL "Force use of std::stacktrace instead of libbacktrace. If it is not supported the build will fail")
 serenity_option(ENABLE_WINDOWS_CI OFF CACHE BOOL "Enable building targets supported on Windows for CI")
 
-if (APPLE AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
+if (ENABLE_FUZZERS_LIBFUZZER)
+    # With libfuzzer, we need to avoid a duplicate main() linker error giving false negatives
+    set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY CACHE STRING "Type of target to use for try_compile()" FORCE)
 endif()
 
 if (ENABLE_SWIFT)

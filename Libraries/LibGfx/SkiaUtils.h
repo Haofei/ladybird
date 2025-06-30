@@ -20,6 +20,7 @@
 #include <core/SkImageFilter.h>
 #include <core/SkPaint.h>
 #include <core/SkPath.h>
+#include <core/SkPathEffect.h>
 #include <core/SkSamplingOptions.h>
 
 namespace Gfx {
@@ -120,9 +121,9 @@ constexpr SkSamplingOptions to_skia_sampling_options(Gfx::ScalingMode scaling_mo
 {
     switch (scaling_mode) {
     case Gfx::ScalingMode::NearestNeighbor:
+    case Gfx::ScalingMode::SmoothPixels:
         return SkSamplingOptions(SkFilterMode::kNearest);
     case Gfx::ScalingMode::BilinearBlend:
-    case Gfx::ScalingMode::SmoothPixels:
         return SkSamplingOptions(SkFilterMode::kLinear);
     case Gfx::ScalingMode::BoxSampling:
         return SkSamplingOptions(SkCubicResampler::Mitchell());

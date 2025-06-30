@@ -10,6 +10,14 @@ endif()
 # vcpkg flags depend on what linker we are using
 include("Meta/CMake/use_linker.cmake")
 
+if (APPLE AND NOT CMAKE_OSX_DEPLOYMENT_TARGET)
+    if (ENABLE_SWIFT)
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 15.0)
+    else()
+        set(CMAKE_OSX_DEPLOYMENT_TARGET 14.0)
+    endif()
+endif()
+
 # Pass additional information to vcpkg toolchain files if we are using vcpkg.
 if (CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake$")
     set(CMAKE_PROJECT_ladybird_INCLUDE_BEFORE "Meta/CMake/vcpkg/generate_vcpkg_toolchain_variables.cmake")
@@ -54,7 +62,7 @@ if (ANDROID AND ENABLE_QT)
     set(ENABLE_QT OFF CACHE BOOL "" FORCE)
 endif()
 
-if (ENABLE_QT AND ENABLE_GUI_TARGETS)
+if (ENABLE_QT AND ENABLE_GUI_TARGETS AND (NOT WIN32 OR NOT ENABLE_WINDOWS_CI))
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTORCC ON)
     set(CMAKE_AUTOUIC ON)
@@ -66,7 +74,7 @@ find_package(OpenSSL REQUIRED)
 
 include(CTest) # for BUILD_TESTING option, default ON
 
-if (ENABLE_GUI_TARGETS)
+if (ENABLE_GUI_TARGETS AND (NOT WIN32 OR NOT ENABLE_WINDOWS_CI))
     add_subdirectory(Services)
     add_subdirectory(UI)
 endif()
